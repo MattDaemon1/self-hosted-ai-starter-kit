@@ -1,0 +1,43 @@
+{
+	# Configuration globale
+	auto_https off
+	local_certs
+}
+
+# Interface principale n8n
+:80 {
+	reverse_proxy n8n:5678
+	log {
+		output file /var/log/caddy/access.log
+	}
+}
+
+# Interface n8n avec HTTPS local (auto-signé)
+:443 {
+	reverse_proxy n8n:5678
+	tls internal
+	log {
+		output file /var/log/caddy/access.log
+	}
+}
+
+# API Ollama
+:8080 {
+	reverse_proxy ollama:11434
+	log {
+		output file /var/log/caddy/ollama.log
+	}
+}
+
+# Interface Qdrant
+:8081 {
+	reverse_proxy qdrant:6333
+	log {
+		output file /var/log/caddy/qdrant.log
+	}
+}
+
+# Healthcheck endpoint
+:8082 {
+	respond /health "OK" 200
+}
