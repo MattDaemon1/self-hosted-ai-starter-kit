@@ -1,35 +1,20 @@
 {
 	# Configuration globale
-	auto_https off
 	local_certs
 }
 
-# Domaine local fixe pour n8n avec HTTPS
-n8n.local {
+# Interface principale n8n pour Cloudflare (accepte toutes les requêtes HTTPS)
+:443 {
 	reverse_proxy n8n:5678
 	tls internal
 	log {
-		output file /var/log/caddy/n8n.log
+		output file /var/log/caddy/n8n-public.log
 	}
-}
-
-# Redirection HTTP vers HTTPS pour n8n.local
-http://n8n.local {
-	redir https://n8n.local{uri} permanent
 }
 
 # Interface principale n8n (fallback)
 :80 {
 	reverse_proxy n8n:5678
-	log {
-		output file /var/log/caddy/access.log
-	}
-}
-
-# Interface n8n avec HTTPS local (auto-signé)
-:443 {
-	reverse_proxy n8n:5678
-	tls internal
 	log {
 		output file /var/log/caddy/access.log
 	}

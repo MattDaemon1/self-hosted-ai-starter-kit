@@ -23,8 +23,9 @@ x-n8n: &service-n8n
     - N8N_USER_MANAGEMENT_JWT_SECRET
     - N8N_HOST
     - N8N_PROTOCOL
-    - N8N_PORT
     - WEBHOOK_URL
+    - N8N_WEBHOOK_URL
+    - N8N_EDITOR_BASE_URL
     - OLLAMA_HOST=${OLLAMA_HOST:-ollama:11434}
   env_file:
     - path: .env
@@ -177,3 +178,12 @@ services:
       - n8n
       - qdrant
       - postgres
+
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel
+    networks: ['demo']
+    restart: unless-stopped
+    command: tunnel --url http://caddy:80 --no-autoupdate
+    depends_on:
+      - caddy
