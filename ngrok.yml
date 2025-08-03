@@ -1,0 +1,57 @@
+version: "2"
+authtoken: ${NGROK_AUTHTOKEN}
+
+# Interface web ngrok
+web_addr: 0.0.0.0:4040
+
+# Tunnels
+tunnels:
+  # Tunnel principal pour n8n (HTTP)
+  n8n-http:
+    addr: caddy:80
+    proto: http
+    hostname: ${NGROK_DOMAIN:-}
+    inspect: true
+    bind_tls: false
+    
+  # Tunnel sécurisé pour n8n (HTTPS)
+  n8n-https:
+    addr: caddy:443
+    proto: http
+    hostname: ${NGROK_HTTPS_DOMAIN:-}
+    inspect: true
+    bind_tls: true
+    
+  # Tunnel pour l'API Ollama
+  ollama-api:
+    addr: caddy:8080
+    proto: http
+    hostname: ${NGROK_OLLAMA_DOMAIN:-}
+    inspect: true
+    auth: ${NGROK_OLLAMA_AUTH:-}
+    
+  # Tunnel pour Qdrant
+  qdrant-api:
+    addr: caddy:8081
+    proto: http
+    hostname: ${NGROK_QDRANT_DOMAIN:-}
+    inspect: true
+    auth: ${NGROK_QDRANT_AUTH:-}
+    
+  # Tunnel pour health check
+  health:
+    addr: caddy:8082
+    proto: http
+    hostname: ${NGROK_HEALTH_DOMAIN:-}
+    inspect: true
+
+# Logs
+log_level: info
+log_format: logfmt
+log: /var/log/ngrok.log
+
+# Métriques
+metrics_addr: 0.0.0.0:9090
+
+# Configuration régionale
+region: eu

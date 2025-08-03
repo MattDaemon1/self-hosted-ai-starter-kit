@@ -173,3 +173,25 @@ services:
       - n8n
       - qdrant
       - postgres
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    hostname: ngrok
+    networks: ['demo']
+    restart: unless-stopped
+    ports:
+      - "4040:4040"   # ngrok web interface
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN:-}
+      - NGROK_CONFIG=/etc/ngrok.yml
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml:ro
+    command: 
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    depends_on:
+      - n8n
+      - caddy
