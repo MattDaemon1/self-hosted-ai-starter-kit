@@ -25,6 +25,7 @@ x-n8n: &service-n8n
     - N8N_HOST
     - N8N_PROTOCOL
     - N8N_PORT
+    - WEBHOOK_URL
     - OLLAMA_HOST=${OLLAMA_HOST:-ollama:11434}
   env_file:
     - path: .env
