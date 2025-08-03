@@ -4,7 +4,21 @@
 	local_certs
 }
 
-# Interface principale n8n
+# Domaine local fixe pour n8n avec HTTPS
+n8n.local {
+	reverse_proxy n8n:5678
+	tls internal
+	log {
+		output file /var/log/caddy/n8n.log
+	}
+}
+
+# Redirection HTTP vers HTTPS pour n8n.local
+http://n8n.local {
+	redir https://n8n.local{uri} permanent
+}
+
+# Interface principale n8n (fallback)
 :80 {
 	reverse_proxy n8n:5678
 	log {
